@@ -1,11 +1,43 @@
 <ion-header>
-  <ion-navbar>
+  <ion-navbar color="primary">
     <ion-title>
       Sonidos APP
     </ion-title>
+
+    <ion-buttons end>
+      <button ion-button (click)="ordenando = true" *ngIf="!ordenando">
+        Ordenar
+      </button>
+      <button ion-button (click)="ordenando = false" *ngIf="ordenando">
+        Lista
+      </button>
+    </ion-buttons>
+
   </ion-navbar>
 </ion-header>
 
-<ion-content padding>
-  <h1>Hola</h1>
+<ion-content>
+
+  <ion-refresher [enabled]="!ordenando" (ionRefresh)="recargarAnimales($event)">
+    <ion-refresher-content></ion-refresher-content>
+  </ion-refresher>
+
+  <ion-list [reorder]="ordenando" (ionItemReorder)="reordenarAnimales($event)">
+    <ion-item-sliding *ngFor="let animal of animales; let idx = index;" (click)="reproducir(animal)">
+      <ion-item>
+        <ion-avatar item-start>
+          <img [src]="animal.imagen">
+        </ion-avatar>
+        <h2>{{animal.nombre}}</h2>
+        <ion-icon item-right ios="ios-play" md="md-play" *ngIf="!animal.reproduciendo && !ordenando"></ion-icon>
+        <ion-icon item-right ios="ios-pause" md="md-pause" *ngIf="animal.reproduciendo  && !ordenando"></ion-icon>
+      </ion-item>
+      <ion-item-options side="right">
+        <button ion-button color="danger" (click)="borrarAnimal(idx)">
+        <ion-icon name="trash"></ion-icon>
+        Eliminar
+      </button>
+      </ion-item-options>
+    </ion-item-sliding>
+  </ion-list>
 </ion-content>
